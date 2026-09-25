@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -101,47 +99,33 @@ public class Esp extends Module {
         double camY = mc.getRenderManager().viewerPosY;
         double camZ = mc.getRenderManager().viewerPosZ;
 
-        GlStateManager.disableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableLighting();
-        GlStateManager.disableCull();
-
         int r = (Theme.ACCENT >> 16) & 0xFF;
         int g = (Theme.ACCENT >> 8) & 0xFF;
         int b = Theme.ACCENT & 0xFF;
         int a = 255;
 
+        GlStateManager.disableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
         for (Entity entity : mc.theWorld.playerEntities) {
             if (entity == mc.thePlayer) continue;
             double posX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
             double posY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
             double posZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
-
             AxisAlignedBB bb = entity.getEntityBoundingBox();
+
             if (RenderUtil.pointNearBox(camX, camY, camZ, bb, NEAR_CAMERA_MARGIN)) continue;
-            drawBox(bb, entity.posX, entity.posY, entity.posZ, posX, posY, posZ, camX, camY, camZ, r, g, b, a, tessellator);
+
+            double pad = 0.1D;
+            AxisAlignedBB box = AxisAlignedBB.fromBounds(
+                    bb.minX + posX - entity.posX - camX - pad,
+                    bb.minY + posY - entity.posY - camY - pad,
+                    bb.minZ + posZ - entity.posZ - camZ - pad,
+                    bb.maxX + posX - entity.posX - camX + pad,
+                    bb.maxY + posY - entity.posY - camY + pad,
+                    bb.maxZ + posZ - entity.posZ - camZ + pad);
+            RenderUtil.drawOutlinedBox(tessellator, box, r, g, b, a);
         }
-
-        GlStateManager.enableBlend();
-        GlStateManager.enableCull();
-        GlStateManager.enableLighting();
         GlStateManager.enableTexture2D();
-    }
-
-    private void drawBox(AxisAlignedBB bb, double baseX, double baseY, double baseZ, double posX, double posY, double posZ, double camX, double camY, double camZ, int r, int g, int b, int a, Tessellator tessellator) {
-        double pad = 0.1D;
-        AxisAlignedBB box = AxisAlignedBB.fromBounds(
-                bb.minX - baseX + posX - camX - pad,
-                bb.minY - baseY + posY - camY - pad,
-                bb.minZ - baseZ + posZ - camZ - pad,
-                bb.maxX - baseX + posX - camX + pad,
-                bb.maxY - baseY + posY - camY + pad,
-                bb.maxZ - baseZ + posZ - camZ + pad);
-        WorldRenderer wr = tessellator.getWorldRenderer();
-        wr.begin(1, DefaultVertexFormats.POSITION_COLOR);
-        RenderUtil.drawOutlinedBox(wr, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, r, g, b, a);
-        tessellator.draw();
     }
 
     private void collect2D() {

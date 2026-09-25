@@ -3,7 +3,9 @@ package com.kalca.voidfulenhancements.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.AxisAlignedBB;
 
 public class RenderUtil {
@@ -17,24 +19,34 @@ public class RenderUtil {
         return dx * dx + dy * dy + dz * dz < margin * margin;
     }
 
-    public static void drawOutlinedBox(WorldRenderer wr, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, int r, int g, int b, int a) {
-        line(wr, minX, minY, minZ, maxX, minY, minZ, r, g, b, a);
-        line(wr, maxX, minY, minZ, maxX, minY, maxZ, r, g, b, a);
-        line(wr, maxX, minY, maxZ, minX, minY, maxZ, r, g, b, a);
-        line(wr, minX, minY, maxZ, minX, minY, minZ, r, g, b, a);
-        line(wr, minX, maxY, minZ, maxX, maxY, minZ, r, g, b, a);
-        line(wr, maxX, maxY, minZ, maxX, maxY, maxZ, r, g, b, a);
-        line(wr, maxX, maxY, maxZ, minX, maxY, maxZ, r, g, b, a);
-        line(wr, minX, maxY, maxZ, minX, maxY, minZ, r, g, b, a);
-        line(wr, minX, minY, minZ, minX, maxY, minZ, r, g, b, a);
-        line(wr, maxX, minY, minZ, maxX, maxY, minZ, r, g, b, a);
-        line(wr, maxX, minY, maxZ, maxX, maxY, maxZ, r, g, b, a);
-        line(wr, minX, minY, maxZ, minX, maxY, maxZ, r, g, b, a);
+    public static void drawOutlinedBox(Tessellator tessellator, AxisAlignedBB box, int r, int g, int b, int a) {
+        WorldRenderer wr = tessellator.getWorldRenderer();
+        wr.begin(3, DefaultVertexFormats.POSITION_COLOR);
+        vertex(wr, box.minX, box.minY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.minY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.minY, box.maxZ, r, g, b, a);
+        vertex(wr, box.minX, box.minY, box.maxZ, r, g, b, a);
+        tessellator.draw();
+        wr.begin(3, DefaultVertexFormats.POSITION_COLOR);
+        vertex(wr, box.minX, box.maxY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.maxY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.maxY, box.maxZ, r, g, b, a);
+        vertex(wr, box.minX, box.maxY, box.maxZ, r, g, b, a);
+        tessellator.draw();
+        wr.begin(1, DefaultVertexFormats.POSITION_COLOR);
+        vertex(wr, box.minX, box.minY, box.minZ, r, g, b, a);
+        vertex(wr, box.minX, box.maxY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.minY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.maxY, box.minZ, r, g, b, a);
+        vertex(wr, box.maxX, box.minY, box.maxZ, r, g, b, a);
+        vertex(wr, box.maxX, box.maxY, box.maxZ, r, g, b, a);
+        vertex(wr, box.minX, box.minY, box.maxZ, r, g, b, a);
+        vertex(wr, box.minX, box.maxY, box.maxZ, r, g, b, a);
+        tessellator.draw();
     }
 
-    private static void line(WorldRenderer wr, double x1, double y1, double z1, double x2, double y2, double z2, int r, int g, int b, int a) {
-        wr.pos(x1, y1, z1).color(r, g, b, a).endVertex();
-        wr.pos(x2, y2, z2).color(r, g, b, a).endVertex();
+    private static void vertex(WorldRenderer wr, double x, double y, double z, int r, int g, int b, int a) {
+        wr.pos(x, y, z).color(r, g, b, a).endVertex();
     }
 
     public static void drawRect(float x, float y, float w, float h, int color) {

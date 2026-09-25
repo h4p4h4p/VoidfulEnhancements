@@ -11,8 +11,6 @@ import io.netty.channel.ChannelPromise;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -103,33 +101,22 @@ public class Blink extends Module {
                 bb.maxZ - mc.thePlayer.posZ + az);
         if (RenderUtil.pointNearBox(camX, camY, camZ, anchorBox, 1.2D)) return;
 
-        GlStateManager.disableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableLighting();
-        GlStateManager.disableCull();
-
         int r = (Theme.ACCENT >> 16) & 0xFF;
         int g = (Theme.ACCENT >> 8) & 0xFF;
         int b = Theme.ACCENT & 0xFF;
         int a = 255;
 
+        GlStateManager.disableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer wr = tessellator.getWorldRenderer();
-        wr.begin(1, DefaultVertexFormats.POSITION_COLOR);
         double pad = 0.1D;
-        RenderUtil.drawOutlinedBox(wr,
+        AxisAlignedBB box = AxisAlignedBB.fromBounds(
                 bb.minX - mc.thePlayer.posX + ax - camX - pad,
                 bb.minY - mc.thePlayer.posY + ay - camY - pad,
                 bb.minZ - mc.thePlayer.posZ + az - camZ - pad,
                 bb.maxX - mc.thePlayer.posX + ax - camX + pad,
                 bb.maxY - mc.thePlayer.posY + ay - camY + pad,
-                bb.maxZ - mc.thePlayer.posZ + az - camZ + pad,
-                r, g, b, a);
-        tessellator.draw();
-
-        GlStateManager.enableBlend();
-        GlStateManager.enableCull();
-        GlStateManager.enableLighting();
+                bb.maxZ - mc.thePlayer.posZ + az - camZ + pad);
+        RenderUtil.drawOutlinedBox(tessellator, box, r, g, b, a);
         GlStateManager.enableTexture2D();
     }
 
