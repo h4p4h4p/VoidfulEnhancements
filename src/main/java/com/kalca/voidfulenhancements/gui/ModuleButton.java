@@ -2,6 +2,7 @@ package com.kalca.voidfulenhancements.gui;
 
 import com.kalca.voidfulenhancements.module.Module;
 import com.kalca.voidfulenhancements.settings.BooleanSetting;
+import com.kalca.voidfulenhancements.settings.ColorSetting;
 import com.kalca.voidfulenhancements.settings.ModeSetting;
 import com.kalca.voidfulenhancements.settings.Setting;
 import com.kalca.voidfulenhancements.settings.SliderSetting;
@@ -75,6 +76,8 @@ public class ModuleButton {
                 widgets.add(new BooleanWidget((BooleanSetting) setting));
             } else if (setting instanceof ModeSetting) {
                 widgets.add(new ModeWidget((ModeSetting) setting));
+            } else if (setting instanceof ColorSetting) {
+                widgets.add(new ColorWidget((ColorSetting) setting));
             }
             builtSettings.add(setting);
         }

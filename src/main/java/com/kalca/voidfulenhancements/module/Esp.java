@@ -1,7 +1,7 @@
 package com.kalca.voidfulenhancements.module;
 
-import com.kalca.voidfulenhancements.gui.Theme;
 import com.kalca.voidfulenhancements.settings.BooleanSetting;
+import com.kalca.voidfulenhancements.settings.ColorSetting;
 import com.kalca.voidfulenhancements.settings.ModeSetting;
 import com.kalca.voidfulenhancements.settings.Setting;
 import com.kalca.voidfulenhancements.util.RenderUtil;
@@ -32,6 +32,7 @@ public class Esp extends Module {
 
     private final ModeSetting modeSetting = new ModeSetting("Mode", new String[]{MODE_2D, MODE_3D}, 0);
     private final BooleanSetting cornersSetting = new BooleanSetting("Corners", false);
+    private final ColorSetting colorSetting = new ColorSetting("Color", 0xFF1B395C);
 
     private final Minecraft mc = Minecraft.getMinecraft();
     private final List<float[]> rects = new ArrayList<>();
@@ -40,6 +41,7 @@ public class Esp extends Module {
         super("ESP", Category.RENDER);
         settings.add(modeSetting);
         settings.add(cornersSetting);
+        settings.add(colorSetting);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -75,21 +77,22 @@ public class Esp extends Module {
             float y = r[1];
             float w = r[2];
             float h = r[3];
+            int color = colorSetting.getValue();
             float len = Math.max(4f, Math.min(h / 6f, 10f));
             if (cornersSetting.getValue()) {
-                RenderUtil.drawRect(x, y, len, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x, y, 1, len, Theme.ACCENT);
-                RenderUtil.drawRect(x + w - len, y, len, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x + w - 1, y, 1, len, Theme.ACCENT);
-                RenderUtil.drawRect(x, y + h - 1, len, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x, y + h - len, 1, len, Theme.ACCENT);
-                RenderUtil.drawRect(x + w - len, y + h - 1, len, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x + w - 1, y + h - len, 1, len, Theme.ACCENT);
+                RenderUtil.drawRect(x, y, len, 1, color);
+                RenderUtil.drawRect(x, y, 1, len, color);
+                RenderUtil.drawRect(x + w - len, y, len, 1, color);
+                RenderUtil.drawRect(x + w - 1, y, 1, len, color);
+                RenderUtil.drawRect(x, y + h - 1, len, 1, color);
+                RenderUtil.drawRect(x, y + h - len, 1, len, color);
+                RenderUtil.drawRect(x + w - len, y + h - 1, len, 1, color);
+                RenderUtil.drawRect(x + w - 1, y + h - len, 1, len, color);
             } else {
-                RenderUtil.drawRect(x, y, w, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x, y + h - 1, w, 1, Theme.ACCENT);
-                RenderUtil.drawRect(x, y, 1, h, Theme.ACCENT);
-                RenderUtil.drawRect(x + w - 1, y, 1, h, Theme.ACCENT);
+                RenderUtil.drawRect(x, y, w, 1, color);
+                RenderUtil.drawRect(x, y + h - 1, w, 1, color);
+                RenderUtil.drawRect(x, y, 1, h, color);
+                RenderUtil.drawRect(x + w - 1, y, 1, h, color);
             }
         }
     }
@@ -99,9 +102,10 @@ public class Esp extends Module {
         double camY = mc.getRenderManager().viewerPosY;
         double camZ = mc.getRenderManager().viewerPosZ;
 
-        int r = (Theme.ACCENT >> 16) & 0xFF;
-        int g = (Theme.ACCENT >> 8) & 0xFF;
-        int b = Theme.ACCENT & 0xFF;
+        int color = colorSetting.getValue();
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
         int a = 255;
 
         GlStateManager.disableTexture2D();
