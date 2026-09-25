@@ -4,10 +4,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.util.AxisAlignedBB;
 
 public class RenderUtil {
 
     private static final Minecraft mc = Minecraft.getMinecraft();
+
+    public static boolean pointNearBox(double px, double py, double pz, AxisAlignedBB box, double margin) {
+        double dx = Math.max(Math.max(box.minX - px, 0.0D), Math.max(px - box.maxX, 0.0D));
+        double dy = Math.max(Math.max(box.minY - py, 0.0D), Math.max(py - box.maxY, 0.0D));
+        double dz = Math.max(Math.max(box.minZ - pz, 0.0D), Math.max(pz - box.maxZ, 0.0D));
+        return dx * dx + dy * dy + dz * dz < margin * margin;
+    }
 
     public static void drawOutlinedBox(WorldRenderer wr, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, int r, int g, int b, int a) {
         line(wr, minX, minY, minZ, maxX, minY, minZ, r, g, b, a);

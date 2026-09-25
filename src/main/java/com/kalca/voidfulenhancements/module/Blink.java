@@ -94,6 +94,15 @@ public class Blink extends Module {
         double az = hasAnchor() ? anchorZ : mc.thePlayer.posZ;
         AxisAlignedBB bb = mc.thePlayer.getEntityBoundingBox();
 
+        AxisAlignedBB anchorBox = AxisAlignedBB.fromBounds(
+                bb.minX - mc.thePlayer.posX + ax,
+                bb.minY - mc.thePlayer.posY + ay,
+                bb.minZ - mc.thePlayer.posZ + az,
+                bb.maxX - mc.thePlayer.posX + ax,
+                bb.maxY - mc.thePlayer.posY + ay,
+                bb.maxZ - mc.thePlayer.posZ + az);
+        if (RenderUtil.pointNearBox(camX, camY, camZ, anchorBox, 1.2D)) return;
+
         GlStateManager.disableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();

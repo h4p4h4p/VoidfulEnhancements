@@ -30,7 +30,7 @@ public class Esp extends Module {
     public static final String MODE_2D = "2D";
     public static final String MODE_3D = "3D";
 
-    private static final double MIN_3D_DISTANCE = 2.0D;
+    private static final double NEAR_CAMERA_MARGIN = 1.2D;
 
     private final ModeSetting modeSetting = new ModeSetting("Mode", new String[]{MODE_2D, MODE_3D}, 0);
     private final BooleanSetting cornersSetting = new BooleanSetting("Corners", false);
@@ -118,12 +118,8 @@ public class Esp extends Module {
             double posY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
             double posZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
-            double dx = posX - camX;
-            double dy = posY - camY;
-            double dz = posZ - camZ;
-            if (dx * dx + dy * dy + dz * dz < MIN_3D_DISTANCE * MIN_3D_DISTANCE) continue;
-
             AxisAlignedBB bb = entity.getEntityBoundingBox();
+            if (RenderUtil.pointNearBox(camX, camY, camZ, bb, NEAR_CAMERA_MARGIN)) continue;
             drawBox(bb, entity.posX, entity.posY, entity.posZ, posX, posY, posZ, camX, camY, camZ, r, g, b, a, tessellator);
         }
 
