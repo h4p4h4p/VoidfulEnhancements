@@ -12,6 +12,7 @@ public class ModuleManager {
         modules.add(new Eagle());
         modules.add(new Blink());
         modules.add(new LeftClicker());
+        modules.add(new DelayRemover());
         modules.add(new RightClicker());
         modules.add(new Esp());
         modules.add(new Interface());
