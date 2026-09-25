@@ -69,8 +69,8 @@ public class LeftClicker extends Module {
     private void click() {
         MovingObjectPosition over = mc.objectMouseOver;
         if (over != null && over.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && over.entityHit != null) {
-            mc.playerController.attackEntity(mc.thePlayer, over.entityHit);
             mc.thePlayer.swingItem();
+            mc.playerController.attackEntity(mc.thePlayer, over.entityHit);
         } else {
             mc.thePlayer.swingItem();
             if (over != null && over.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
