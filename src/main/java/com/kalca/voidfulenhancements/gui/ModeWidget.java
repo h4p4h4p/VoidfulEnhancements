@@ -1,0 +1,38 @@
+package com.kalca.voidfulenhancements.gui;
+
+import com.kalca.voidfulenhancements.VoidfulEnhancements;
+import com.kalca.voidfulenhancements.settings.ModeSetting;
+import com.kalca.voidfulenhancements.util.RenderUtil;
+
+public class ModeWidget extends Widget {
+
+    private final ModeSetting setting;
+
+    public ModeWidget(ModeSetting setting) {
+        this.setting = setting;
+    }
+
+    @Override
+    public float getPreferredWidth() {
+        return Math.max(120, RenderUtil.getTextWidth(setting.getName()) + 6 + RenderUtil.getTextWidth(setting.getValue()) + 16);
+    }
+
+    @Override
+    public void draw(float mx, float my) {
+        boolean hovered = contains(mx, my);
+        RenderUtil.drawString(setting.getName(), x + 6, y + 4, Theme.TEXT_GRAY);
+
+        String value = setting.getValue();
+        float vw = RenderUtil.getTextWidth(value);
+        RenderUtil.drawString(value, x + width - 12 - vw, y + 4, hovered ? 0xFF8AE9FF : Theme.ACCENT);
+    }
+
+    @Override
+    public boolean onClick(float mx, float my, int button) {
+        if (button != 0 && button != 1) return false;
+        int next = (setting.getIndex() + 1) % setting.getOptions().length;
+        setting.setIndex(next);
+        VoidfulEnhancements.scheduleSave();
+        return true;
+    }
+}

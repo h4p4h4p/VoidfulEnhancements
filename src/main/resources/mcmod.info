@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "voidfulenhancements",
+    "name": "VoidfulEnhancements",
+    "description": "VoidfulEnhancements v0.4",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["kalca"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
