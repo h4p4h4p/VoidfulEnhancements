@@ -14,7 +14,7 @@ buildscript {
 apply plugin: "java"
 apply plugin: "net.minecraftforge.gradle.forge"
 
-version = "0.4"
+version = "5.0"
 group = "com.kalca.voidfulenhancements"
 archivesBaseName = "voidfulenhancements"
 
