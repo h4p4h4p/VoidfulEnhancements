@@ -1,6 +1,7 @@
 package com.kalca.voidfulenhancements.module;
 
 import com.kalca.voidfulenhancements.settings.ModeSetting;
+import com.kalca.voidfulenhancements.settings.Setting;
 import com.kalca.voidfulenhancements.settings.SliderSetting;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -41,6 +42,12 @@ public class Fullbright extends Module {
         if (MODE_GAMMA.equals(mode())) {
             mc.gameSettings.gammaSetting = (float) gammaSetting.getValue();
         }
+    }
+
+    @Override
+    public boolean isSettingVisible(Setting setting) {
+        if (setting == gammaSetting) return MODE_GAMMA.equals(mode());
+        return true;
     }
 
     private String mode() {
